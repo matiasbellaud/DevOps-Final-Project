@@ -1,0 +1,8 @@
+# Node.js dependencies
+node_modules/
+
+# Base de données SQLite
+*.db
+
+# Fichiers spécifiques à MacOS
+.DS_Store
