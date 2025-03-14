@@ -1,0 +1,23 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Cloner le repo
+        uses: actions/checkout@v4
+
+      - name: 🔧 Installer Railway CLI
+        run: |
+          npm install -g @railway/cli
+
+      - name: 🚀 Déployer sur Railway
+        run: |
+          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+          railway up
