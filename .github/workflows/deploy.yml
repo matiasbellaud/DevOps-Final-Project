@@ -1,4 +1,4 @@
-name: Deploy to Railway
+name: Deploy Docker App
 
 on:
   push:
@@ -8,16 +8,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📥 Cloner le repo
-        uses: actions/checkout@v4
+      name: Checkout du repo
+      uses: actions/checkout@v3
 
-      - name: 🔧 Installer Railway CLI
-        run: |
-          npm install -g @railway/cli
+      
+name: Install Railway CLI
+run: |
+    curl -fsSL https://railway.app/install.sh | sh
 
-      - name: 🚀 Déployer sur Railway
-        run: |
-          railway login --token ${{ secrets.RAILWAY_TOKEN }}
-          railway up
+      
+name: Deploy Docker Containers
+run: railway up
