@@ -1,14 +1,27 @@
-# Image officielle Node.js version 18
-FROM node:18
+# Étape 1 : Construction de l’application
+FROM node:18 AS builder
 
-# Définit le répertoire de travail dans le conteneur
+#Répertoire de travail 
 WORKDIR /app
 
-# Copie tous les fichiers du projet dans le conteneur
+#Copiez les fichiers Package-lock.json et package.json pour l'installation des dépendances
+COPY package*.json ./
+
+# Installation des dépendances uniquement pour la production et nettoyage du cache
+RUN npm install --only=production && npm cache clean --force
+
+#Copiez les fichiers vers le repertoire de travail /app
 COPY . .
 
-# Installe les dépendances du projet
-RUN npm install
+# Étape 2 : Image de production : une image plus légère
+# alpine est une version allégée de node
+FROM node:18-alpine
+
+# Répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copie des fichiers depuis l’étape de build
+COPY --from=builder /app .  
 
 # Le conteneur utilise le port 3000
 EXPOSE 3000

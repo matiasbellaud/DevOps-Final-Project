@@ -1,0 +1,8 @@
+{
+    "build": {
+      "dockerfile": "Front/Dockerfile"
+    },
+    "deploy": {
+      "startCommand": "node index.js"
+    }
+  }

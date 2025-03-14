@@ -6,7 +6,36 @@ on:
       - main
 
 jobs:
+  lint-and-test:
+    name: 🔍 Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du repo
+        uses: actions/checkout@v3
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Installer les dépendances
+        run: |
+          cd Back
+          npm install
+
+      - name: Exécuter ESLint
+        run: |
+          cd Back
+          npm run lint
+
+      - name: Exécuter les tests (Jest)
+        run: |
+          cd Back
+          npm test
+
   deploy:
+    name: 🚀 Deploy to Railway
+    needs: lint-and-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout du repo

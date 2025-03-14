@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   frontend:
     build: ./Front # Chemin vers le Dockerfile pour construire l'image du frontend

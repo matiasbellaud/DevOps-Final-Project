@@ -17,31 +17,42 @@ Ce projet consiste en la mise en œuvre d'une chaîne DevOps complète pour le d
     cd m3-devops-final-project-mem/
     ```
 
-2. Créer un fichier `.env` dans le dossier `Back` en se basant sur `.env.example` :
-    ```sh
-    cp Back/.env.example Back/.env
-    ```
-
-3. Lancer Docker Compose :
+2. Lancer Docker Compose :
     ```sh
     docker-compose up --build
     ```
 
-4. Accéder à l'application :
+3. Accéder à l'application :
     - Frontend : [http://localhost:3000](http://localhost:3000)
     - Backend : [http://localhost:5000](http://localhost:5000)
 
 ## Liste des technologies utilisées
 - Git et GitHub (gestion de version, pull requests)
-- Docker et Docker Compose (containerisation)
+- Docker et Docker Compose (contenairisation)
 - Node.js
 - Express
 - PostgreSQL
+- Jest et Lint
 
 ## Dockerisation complète de l'application
 - Création de Dockerfiles pour le frontend, le backend et la base de données.
 - Orchestration des services via Docker Compose.
 
+## Tests et qualité de code
+- Afin d'assuré la qualité du code nous avonc mis en place Lint (dépendance nodeJs) qui vérifie le code du back-end
+    commande : `npm run lint`
+- Test unitaire avec Jest
+    commande : `npm test`
+
+## Multi stage builds
+Le projet utilise des Dockerfiles multi-stage pour construire des images Docker optimisées :
+
+    Backend : 
+    Le processus de build dans Docker installe les dépendances de développement, puis crée une image optimisée pour la production, avec uniquement les dépendances nécessaires.
+
+    Frontend : 
+    Le processus de build compile le frontend (React ou autre) dans un premier stage, puis utilise une image légère de nginx pour servir les fichiers statiques dans un deuxième stage.
+
 ## Gestion sécurisée des secrets
 - Utilisation de variables d'environnement (.env) pour les configurations sensibles.
-- Stockage sécurisé des secrets (ex: Docker Secrets, variables d'environnement du PaaS).
+- Stockage sécurisé des secrets (variables d'environnement du PaaS).
