@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./Front # Chemin vers le Dockerfile pour construire l'image du frontend
+    ports:
+      - "3000:3000" # Redirection du port 3000 du host vers le port 3000 du conteneur (host:conteneur)
+    # Montage des volumes pour le partage de fichiers entre le host et le conteneur
+    volumes:
+      - ./Front:/app # Dossier host Front vers le dossier conteneur /app
+      - /app/node_modules
+    depends_on:
+      - backend # Le front dépend du back pour fonctionner
+
+  backend:
+    build: ./Back # Chemin vers le Dockerfile pour construire l'image du backend
+    ports:
+      - "5000:5000" # Redirection du port 5000 du host vers le port 5000 du conteneur (host:conteneur)
+    # Montage des volumes pour le partage de fichiers entre le host et le conteneur
+    volumes:
+      - ./Back:/app # Dossier host Back vers le dossier conteneur /app
+      - /app/node_modules
+    # Variables d'environnement pour la configuration de l'application
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - DB_NAME=projetdb
+    # Dépendance du backend envers la base de données
+    depends_on:
+      postgres:
+        condition: service_healthy # Vérifie que la bdd soit lancée
+
+  # Configuration du service de la base de données
+  postgres:
+    image: postgres:15
+    restart: always # Redémarrage automatique du conteneur en cas d'erreur
+    # Variables d'environnement pour la configuration de la base de données
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: projetdb
+    ports:
+      - "5432:5432" # Redirection du port 5432 du host vers le port 5432 du conteneur (host:conteneur)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Montage du volume pour la persistance des données
+    # Configuration du healthcheck pour vérifier l'état de la base de données
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d projetdb"]
+      # Vérifie toutes les 10s / 5 tentatives / avec un timeout de 5s
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+volumes:
+  postgres_data: # Volume pour la persistance des données de la base de données

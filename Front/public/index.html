@@ -1,72 +1,82 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Liste des Éléments</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Liste des éléments</h1>
-    
+
     <!-- Formulaire pour ajouter un élément -->
     <form id="addItemForm">
-        <input type="text" id="itemName" placeholder="Nom de l'élément" required>
-        <button type="submit">Ajouter</button>
+      <input
+        type="text"
+        id="itemName"
+        placeholder="Nom de l'élément"
+        required
+      />
+      <button type="submit">Ajouter</button>
     </form>
 
     <!-- Liste des éléments -->
     <ul id="itemsList">
-        <!-- Les éléments seront affichés ici -->
+      <!-- Les éléments seront affichés ici -->
     </ul>
 
     <script>
-        // Fonction pour récupérer et afficher les éléments
-        function getItems() {
-            fetch('http://localhost:5000/api/items')  // Appel à l'API du back-end
-                .then(response => response.json())
-                .then(items => {
-                    const itemsList = document.getElementById('itemsList');
-                    itemsList.innerHTML = ''; // Réinitialiser la liste
+      // Fonction pour récupérer et afficher les éléments
+      function getItems() {
+        fetch("http://localhost:5000/api/items") // Appel à l'API du back-end
+          .then((response) => response.json())
+          .then((items) => {
+            const itemsList = document.getElementById("itemsList");
+            itemsList.innerHTML = ""; // Réinitialiser la liste
 
-                    // Afficher chaque élément dans la liste
-                    items.forEach(item => {
-                        const li = document.createElement('li');
-                        li.textContent = item.name; // Ajouter le nom de l'élément
-                        itemsList.appendChild(li);
-                    });
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la récupération des éléments :', error);
-                });
-        }
+            // Afficher chaque élément dans la liste
+            items.forEach((item) => {
+              const li = document.createElement("li");
+              li.textContent = item.name; // Ajouter le nom de l'élément
+              itemsList.appendChild(li);
+            });
+          })
+          .catch((error) => {
+            console.error(
+              "Erreur lors de la récupération des éléments :",
+              error
+            );
+          });
+      }
 
-        // Récupérer les éléments dès le chargement de la page
-        window.onload = getItems;
+      // Récupérer les éléments dès le chargement de la page
+      window.onload = getItems;
 
-        // Fonction pour ajouter un nouvel élément via le formulaire
-        document.getElementById('addItemForm').addEventListener('submit', (event) => {
-            event.preventDefault();
+      // Fonction pour ajouter un nouvel élément via le formulaire
+      document
+        .getElementById("addItemForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
 
-            const itemName = document.getElementById('itemName').value;
+          const itemName = document.getElementById("itemName").value;
 
-            // Envoi du nouvel élément à l'API
-            fetch('http://localhost:5000/api/items', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: itemName }),
+          // Envoi du nouvel élément à l'API
+          fetch("http://localhost:5000/api/items", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: itemName }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Élément ajouté :", data);
+              getItems(); // Récupérer à nouveau la liste pour afficher l'élément ajouté
+              document.getElementById("itemName").value = ""; // Réinitialiser le champ
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Élément ajouté :', data);
-                getItems(); // Récupérer à nouveau la liste pour afficher l'élément ajouté
-                document.getElementById('itemName').value = ''; // Réinitialiser le champ
-            })
-            .catch(error => {
-                console.error('Erreur lors de l\'ajout de l\'élément :', error);
+            .catch((error) => {
+              console.error("Erreur lors de l'ajout de l'élément :", error);
             });
         });
     </script>
-</body>
+  </body>
 </html>
