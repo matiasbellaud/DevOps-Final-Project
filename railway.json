@@ -1,8 +1,0 @@
-{
-    "build": {
-      "dockerfile": "docker-compose.yml"
-    },
-    "deploy": {
-      "startCommand": "docker compose up --build"
-    }
-  }
